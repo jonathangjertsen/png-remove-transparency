@@ -1,7 +1,7 @@
 # png-remove-transparency
 
 Adds a white background to transparent PNG files.
-This makes them look less bad
+This makes them look less bad on GitHub in dark mode.
 
 Usage: `png-remove-transparency <img1.png> <img2.png> ... <destination folder>`
 
