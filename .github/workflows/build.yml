@@ -1,0 +1,34 @@
+name: build
+on: [push]
+jobs:
+  Build:
+    strategy:
+      matrix:
+        goos: [windows, linux, darwin]
+        goarch: [amd64, arm64]
+        exclude:
+          - goos: windows
+            goarch: arm64
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@v2
+      - name: Install Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.16.5
+      - name: build
+        run: |
+          mkdir -p build/${{ matrix.goos }}/${{ matrix.goarch }}
+          go build .
+          mv png-remove-transparency* build/${{ matrix.goos }}/${{ matrix.goarch }}
+          rm build/${{ matrix.goos }}/${{ matrix.goarch }}/png-remove-transparency.go
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: binaries-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: |
+            build/${{ matrix.goos }}/${{ matrix.goarch }}
